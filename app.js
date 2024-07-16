@@ -8,18 +8,27 @@ import { router as authRouter } from './routers/authRouter.js';
 
 import { fileURLToPath } from 'url';
 import { dirname, sep } from 'path'
+import cookieParser from 'cookie-parser';
 
 const __dirname = dirname(fileURLToPath(import.meta.url)) + sep
 
 const app = express();
 const corsConfig = {
-    origin: "*",
+    origin: "http://localhost:4200",
+    credentials: true,
     optionSuccessStatus: 200
 }
+const cookieConfig = {
+    httpOnly: true,
+    secure: true,
+    maxAge: 1800,
+    signed: true
+};
 app.set('__dirname', __dirname)
 app.disable('x-powered-by')
 app.use(compression())
-
+app.set('trust proxy', 1)
+app.use(cookieParser())
 app.use(cors(corsConfig))
 app.use(express.json())
 // const events = [
@@ -34,6 +43,14 @@ app.use(express.json())
 // ];
 // app.use(formidableMiddleware({ uploadDir: './uploads', multiples: true }, events))
 app.use(helmet());
+// app.use(function (req, res, next) {
+//     let cookie = req.cookies.cookieName;
+//     if (cookie === undefined) {
+//         let randomNumber = "LOGICFORRANDOMNUMBER"
+//         res.cookie('COOKIENAME', randomNumber, cookieConfig);
+//     };
+//     next();
+// });
 app.use('/api/v1/test', testRouter)
 app.use('/api/v1/auth', authRouter)
 app.use((err, req, res, next) => [

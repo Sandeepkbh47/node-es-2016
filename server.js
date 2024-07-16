@@ -19,3 +19,7 @@ app.listen(PORT, '0.0.0.0', () => {
 // }, app).listen(PORT, '0.0.0.0', () => {
 //     console.log(`Server running at https://0.0.0.0:${PORT}`)
 // })
+
+process.on('unhandledRejection', (err) => {
+    console.log(err)
+})
